@@ -125,7 +125,7 @@ func (tileService *TileService) GetTile(
 				(WITH data AS (
 					SELECT  * FROM setup WHERE __internal_geometry_type__ = 'ST_Point'
 				), indexed AS (
-					SELECT h3_lat_lng_to_cell(__internal_geometry_text__, {{.h3Resolution}}) as __internal_h3_index__, * FROM data 
+					SELECT h3_lat_lng_to_cell(CAST({{.geoCol}} as point), {{.h3Resolution}}) as __internal_h3_index__, * FROM data 
 				), counted_index AS (
 					SELECT *, row_number() over (partition by __internal_h3_index__ ORDER BY __internal_h3_index__ DESC) as h3ClusterCount FROM indexed
 				)
